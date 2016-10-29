@@ -1,4 +1,4 @@
-'use strict';
+
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
 var serveStatic = require('serve-static');
@@ -14,11 +14,45 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+    'use strict';
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
     var serveStatic = require('serve-static');
 
     grunt.initConfig({
+	pkg: grunt.file.readJSON('package.json'),
+
+	concat: {
+	      options: {
+		separator: ';'
+	      },
+	      dist: {
+		src: ['app/js/**/*.js'],
+		dest: 'dist/<%= pkg.name %>.js'
+	      }
+	    },
+	    uglify: {
+	      options: {
+		banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+	      },
+	      dist: {
+		files: {
+		  'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+		}
+	      }
+	    },
+	    jshint: {
+	      files: ['Gruntfile.js', 'app/js/**/*.js'],
+	      options: {
+		// options here to override JSHint defaults
+		globals: {
+		  console: true,
+		  module: true,
+		  document: true
+		}
+	      }
+	    },
+
         watch: {
             options: {
                 nospawn: true
@@ -73,6 +107,11 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+
     grunt.registerTask('server', function (target) {
 
         grunt.task.run([
@@ -82,4 +121,7 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
+
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+
 };
