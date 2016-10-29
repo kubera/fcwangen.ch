@@ -1,0 +1,25 @@
+{
+  "name": "fcwangen.ch",
+  "description": "Homepage vom FC Wangen bei Olten",
+  "main": "index.html",
+  "authors": [
+    "Stefan Wagner"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "fc",
+    "wangen",
+    "olten",
+    "solothurn"
+  ],
+  "homepage": "http://www.fcwangen.ch/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "test",
+    "tests"
+  ]
+}
